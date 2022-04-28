@@ -18,7 +18,7 @@ if (($# > 1)); then
 else if (($# == 1)); then
        INPUT=$1
      else
-       echo "usage: ..."
+       echo "usage: extractmeta yourfile.md / extractmeta yourfile.md -o result.json"
      fi
 fi
 
