@@ -1,4 +1,12 @@
 #!/bin/bash
+
+display_usage() {
+    echo "Usage: $0 [arguments] <source_file>"
+    echo "\t-h or --help: display this message"
+    echo "\t-o or --output <file>: json file to store metadat" 
+    echo "\t<source_file>: the file to extract metadata"
+}
+
 OUTPUT=""
 INPUT=""
 
@@ -10,6 +18,9 @@ if (($# > 1)); then
             shift
             shift
             ;;
+        -h|--help)
+            display_usage
+	          exit 0            
         *)
             INPUT="$1"
             shift
@@ -18,7 +29,8 @@ if (($# > 1)); then
 else if (($# == 1)); then
        INPUT=$1
      else
-       echo "usage: extractmeta yourfile.md / extractmeta yourfile.md -o result.json"
+       display_usage
+	     exit 1
      fi
 fi
 
