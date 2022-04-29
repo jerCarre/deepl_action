@@ -46,8 +46,10 @@ extractmeta.sh $INPUT -o /tmp/meta.json
 SOURCE_LANG= $(cat /tmp/meta.json | jq 'with_entries(.key |= ascii_downcase ).lang')
 
 # transform input to HTML
+pandoc -t html $INPUT -o /tmp/$INPUT.html
 
 # ask for translation
+curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$INPUT.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" -F "source_lang=$SOURCE_LANG" -o /tmp/response.json
 
 # When using Curl in shell scripts, always pass -fsSL, which: 
 #    Treats non-2xx/3xx responses as errors (-f).
