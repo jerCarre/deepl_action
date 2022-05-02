@@ -20,17 +20,19 @@ if (($# > 1)); then
             ;;
         -h|--help)
             display_usage
-	          exit 0            
+            exit 0
+            ;;
         *)
             INPUT="$1"
             shift
+            ;;
     esac
     done
 else if (($# == 1)); then
        INPUT=$1
      else
        display_usage
-	     exit 1
+             exit 1
      fi
 fi
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
     echo "\t-h or --help: display this message"
@@ -28,37 +30,38 @@ if (($# == 5)); then
                 ;;
             -h|--help)
                 display_usage
-	            exit 0
+                exit 0
+                ;;
             *)
                 INPUT="$1"
                 shift
+                ;;
         esac
     done
 else
     display_usage
-	exit 1
+        exit 1
 fi
 
 # extract meta from input file
-extractmeta.sh $INPUT -o /tmp/meta.json
-
-# search for lang in meta
-SOURCE_LANG= $(cat /tmp/meta.json | jq 'with_entries(.key |= ascii_downcase ).lang')
+SOURCE_LANG=$(./extractmeta.sh $INPUT | jq -r 'with_entries(.key |= ascii_downcase ).lang')
+PARAM_SOURCE_LANG=""
+if [ -z "$SOURCE_LANG" ]; then PARAM_SOURCE_LANG=""; else PARAM_SOURCE_LANG='-F "source_lang=$SOURCE_LANG" '; fi
 
 # transform input to HTML
 pandoc -t html $INPUT -o /tmp/$INPUT.html
 
 # ask for translation
-curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$INPUT.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" -F "source_lang=$SOURCE_LANG" -o /tmp/response.json
+curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$INPUT.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/response.json
 
-# When using Curl in shell scripts, always pass -fsSL, which: 
-#    Treats non-2xx/3xx responses as errors (-f).
-#    Disables the progress meter (-sS).
-#    Handles HTTP redirects (-L).
-
+DOC_ID=$(cat /tmp/response.json | jq -r '.document_id')
+DOC_KEY=$(cat /tmp/response.json | jq -r '.document_key')
 
 # wait for response
+sleep 2
 
 # get translated document
+curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/result.html
+
 
 # convert to output (get output file as pandoc target and it automatically determines target format)
