@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
     echo "\t-h or --help: display this message"
@@ -45,23 +43,39 @@ fi
 
 # extract meta from input file
 SOURCE_LANG=$(./extractmeta.sh $INPUT | jq -r 'with_entries(.key |= ascii_downcase ).lang')
-PARAM_SOURCE_LANG=""
-if [ -z "$SOURCE_LANG" ]; then PARAM_SOURCE_LANG=""; else PARAM_SOURCE_LANG='-F "source_lang=$SOURCE_LANG" '; fi
+PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
+
+# gen UUID
+UUID=$(cat /proc/sys/kernel/random/uuid)
 
 # transform input to HTML
-pandoc -t html $INPUT -o /tmp/$INPUT.html
+pandoc -t html $INPUT -o /tmp/$UUID.html
 
 # ask for translation
-curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$INPUT.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/response.json
+curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$UUID.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
 
-DOC_ID=$(cat /tmp/response.json | jq -r '.document_id')
-DOC_KEY=$(cat /tmp/response.json | jq -r '.document_key')
+DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
+DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
 
 # wait for response
+## TODO use API
 sleep 2
 
 # get translated document
-curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/result.html
+curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
 
+# convert to output
+OUTPUT_EXTENSION=${OUTPUT##*.}
 
-# convert to output (get output file as pandoc target and it automatically determines target format)
+if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
+  PANDOC_OPTIONS='-t markdown-header_attributes --markdown-headings=atx'
+
+  pandoc $PANDOC_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+
+  sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+  sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+else
+  pandoc /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+fi
+
+cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
