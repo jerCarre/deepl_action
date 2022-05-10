@@ -2,10 +2,10 @@
 
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
-    echo "\t-h or --help: display this message"
-    echo "\t-o or --output <file>: the target translated file" 
-    echo "\t-l or --lang <language>: the target language for the translation" 
-    echo "\t<source_file>: the file to translate"
+    echo " -h or --help: display this message"
+    echo " -o or --output <file>: the target translated file" 
+    echo " -l or --lang <language>: the target language for the translation" 
+    echo " <source_file>: the file to translate"
 }
 
 OUTPUT=""
