@@ -1,2 +1,3 @@
-# deepl_action
-A github action to translate file with deepl
+# deepl action
+
+A github action to translate file with deepl (free version).
