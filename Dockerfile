@@ -4,4 +4,4 @@ ADD scripts ./
 
 RUN chmod +x ./*.sh
 
-ENTRYPOINT ["./translate.sh"]
+ENTRYPOINT ["bash", "./translate.sh"]

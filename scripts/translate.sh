@@ -2,10 +2,10 @@
 
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
-    echo "\t-h or --help: display this message"
-    echo "\t-o or --output <file>: the target translated file" 
-    echo "\t-l or --lang <language>: the target language for the translation" 
-    echo "\t<source_file>: the file to translate"
+    echo " -h or --help: display this message"
+    echo " -o or --output <file>: the target translated file" 
+    echo " -l or --lang <language>: the target language for the translation" 
+    echo " <source_file>: the file to translate"
 }
 
 OUTPUT=""
@@ -49,10 +49,10 @@ PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LA
 UUID=$(cat /proc/sys/kernel/random/uuid)
 
 # transform input to HTML
-pandoc -t html $INPUT -o /tmp/$UUID.html
+pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/$UUID.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
@@ -79,3 +79,6 @@ else
 fi
 
 cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
+
+# clean
+rm -rf /tmp/${UUID}.* > /dev/null
