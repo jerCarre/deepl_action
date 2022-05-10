@@ -1,0 +1,27 @@
+name: 'Translate your doc with Deepl Free API'
+description: 'Action to translate a full document using Deepl Free Api'
+author: 'docsascode <docsascode@protonmail.com>'
+inputs:
+  input_file:
+    required: true
+  output_file:
+    required: true
+  output_lang:
+    required: true
+  deepl_free_token:
+    required: true    
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.input_file }}
+    - '--output'
+    - ${{ inputs.output_file }}
+    - '--lang'
+    - ${{ inputs.output_lang }}
+  env:
+    DEEPL_FREE_URL: https://api-free.deepl.com/v2/document
+    DEEPL_FREE_AUTH_TOKEN: ${{ inputs.deepl_free_token }}
+branding:
+  icon: 'flag'
+  color: 'blue'
