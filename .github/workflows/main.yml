@@ -1,4 +1,8 @@
-on: push
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
 jobs:
   translate2en:
     runs-on: ubuntu-latest
