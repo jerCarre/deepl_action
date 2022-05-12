@@ -63,12 +63,12 @@ until [ "$translation_end" = true ]
 do
     rm -f /tmp/${UUID}.status.json > /dev/null
     curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
-    if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("error") ') ]; then
+    if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("error")') = true ]; then
         translation_end=true
         cat /tmp/${UUID}.status.json
         echo "$(cat /tmp/${UUID}.status.json | jq '.message')"
         exit 1
-    else if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("done") ') ]; then
+    else if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("done")') = true ]; then
             translation_end=true
             break            
          fi
