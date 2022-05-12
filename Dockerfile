@@ -1,7 +1,7 @@
 FROM docascod/pandoc:latest
 
-ADD scripts ./
+ADD scripts /
 
-RUN chmod +x ./*.sh
+RUN chmod +x /*.sh
 
-ENTRYPOINT ["bash", "./translate.sh"]
+ENTRYPOINT ["/translate.sh"]

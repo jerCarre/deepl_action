@@ -42,7 +42,7 @@ else
 fi
 
 # extract meta from input file
-SOURCE_LANG=$(./extractmeta.sh $INPUT | jq -r 'with_entries(.key |= ascii_downcase ).lang')
+SOURCE_LANG=$(/extractmeta.sh $INPUT | jq -r 'with_entries(.key |= ascii_downcase ).lang')
 PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
 
 # gen UUID
