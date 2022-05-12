@@ -59,7 +59,7 @@ DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
 
 # wait for response
 translation_end=false
-until [ "$translation_end" = false ]
+until [ "$translation_end" = true ]
 do
     rm -f /tmp/${UUID}.status.json > /dev/null
     curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=a$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
