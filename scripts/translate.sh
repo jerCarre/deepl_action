@@ -62,7 +62,7 @@ translation_end=false
 until [ "$translation_end" = true ]
 do
     rm -f /tmp/${UUID}.status.json > /dev/null
-    curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=a$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
+    curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
     if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("error") ') ]; then
         translation_end=true
         echo "$(cat /tmp/${UUID}.status.json | jq '.message')"
