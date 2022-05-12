@@ -1,5 +1,8 @@
 name: tmp
-on: push
+on:
+  push:
+    branches-ignore:
+      - '**'
 jobs:
   tmp:
     runs-on: ubuntu-latest
