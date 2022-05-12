@@ -1,7 +1,4 @@
-on:
-  push:
-    paths: 
-      - 'example/*.md'
+on: push
 jobs:
   translate2en:
     runs-on: ubuntu-latest
