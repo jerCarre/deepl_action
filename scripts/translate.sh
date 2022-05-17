@@ -42,7 +42,8 @@ else
 fi
 
 # extract meta from input file
-SOURCE_LANG=$(/extractmeta.sh $INPUT | jq -r 'with_entries(.key |= ascii_downcase ).lang')
+/extractmeta.sh $INPUT > /tmp/${UUID}.meta.json
+SOURCE_LANG=$(cat /tmp/${UUID}.meta.json | jq -r 'with_entries(.key |= ascii_downcase ).lang')
 PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
 
 # gen UUID
@@ -81,20 +82,28 @@ curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d 
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
 
-PANDOC_OUTPUT_OPTIONS='-s --wrap=none'
+# edit original meta to insert/update target lang
+cat /tmp/${UUID}.meta.json | jq '.lang=$TARGET_LANG' /tmp/${UUID}.meta_out.json
+
+# define pandoc options
+PANDOC_OUTPUT_OPTIONS='-s --metadata-file=/tmp/${UUID}.meta_out.json --wrap=none'
 
 if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
+
+  # add extra options
   PANDOC_OUTPUT_OPTIONS="${PANDOC_OUTPUT_OPTIONS} -t markdown-header_attributes --markdown-headings=atx"
 
   pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 
+  # clean output markdown : remove ::: , modify code block header
   sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
   sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 else
   pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 fi
 
+# publish output file
 cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
 
-# clean
+# clean tmp files
 rm -rf /tmp/${UUID}.* > /dev/null
