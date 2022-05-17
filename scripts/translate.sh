@@ -81,15 +81,17 @@ curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d 
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
 
-if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
-  PANDOC_OPTIONS='-t markdown-header_attributes --markdown-headings=atx'
+PANDOC_OUTPUT_OPTIONS='-s --wrap=none'
 
-  pandoc $PANDOC_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
+  PANDOC_OUTPUT_OPTIONS="${PANDOC_OUTPUT_OPTIONS} -t markdown-header_attributes --markdown-headings=atx"
+
+  pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 
   sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
   sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 else
-  pandoc /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+  pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 fi
 
 cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT

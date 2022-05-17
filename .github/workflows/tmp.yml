@@ -1,10 +1,10 @@
-name: tmp
+name: dev_check
 on:
   push:
     branches-ignore:
-      - '**'
+      - 'main'
 jobs:
-  tmp:
+  dev_check:
     runs-on: ubuntu-latest
     name: A job to test this action
     steps:
