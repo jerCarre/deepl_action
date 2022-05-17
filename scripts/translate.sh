@@ -83,7 +83,7 @@ curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d 
 OUTPUT_EXTENSION=${OUTPUT##*.}
 
 # edit original meta to insert/update target lang
-cat "/tmp/${UUID}.meta.json" | jq .lang=${TARGET_LANG} /tmp/${UUID}.meta_out.json
+cat "/tmp/${UUID}.meta.json" | jq .lang="${TARGET_LANG}" /tmp/${UUID}.meta_out.json
 
 # define pandoc options
 PANDOC_OUTPUT_OPTIONS="-s --metadata-file=/tmp/${UUID}.meta_out.json --wrap=none"
