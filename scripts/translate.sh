@@ -1,5 +1,12 @@
 #!/bin/bash
 
+OUTPUT=""
+INPUT=""
+TARGET_LANG=""
+
+# gen UUID
+UUID=$(cat /proc/sys/kernel/random/uuid)
+
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
     echo " -h or --help: display this message"
@@ -7,10 +14,6 @@ display_usage() {
     echo " -l or --lang <language>: the target language for the translation" 
     echo " <source_file>: the file to translate"
 }
-
-OUTPUT=""
-INPUT=""
-TARGET_LANG=""
 
 # check args : input, target_lang, output
 if (($# == 5)); then
@@ -45,9 +48,6 @@ fi
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
 PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
-
-# gen UUID
-UUID=$(cat /proc/sys/kernel/random/uuid)
 
 # transform input to HTML
 pandoc -t html $INPUT -o /tmp/${UUID}.html
