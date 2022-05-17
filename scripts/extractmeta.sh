@@ -42,7 +42,7 @@ if [ -z "$OUTPUT" ]; then
   pandoc --template=/tmp/metadata.pandoc-tpl $INPUT
 else
   pandoc --template=/tmp/metadata.pandoc-tpl $INPUT > $OUTPUT
-  echo "with output"
+  echo "with output $OUTPUT"
   cat $OUTPUT
 fi
 rm -f /tmp/metadata.pandoc-tpl
