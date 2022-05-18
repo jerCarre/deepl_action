@@ -53,8 +53,12 @@ PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LA
 # transform input to HTML
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
+cat $INPUT
+
 # ask for translation
 curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+
+cat /tmp/${UUID}.html
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
@@ -80,6 +84,8 @@ done
 # get translated document
 curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
 
+cat /tmp/${UUID}.result.html
+
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
 
@@ -95,6 +101,8 @@ if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
   PANDOC_OUTPUT_OPTIONS="${PANDOC_OUTPUT_OPTIONS} -t markdown-header_attributes --markdown-headings=atx"
 
   pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+
+  cat /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 
   # clean output markdown : remove ::: , modify code block header
   sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
