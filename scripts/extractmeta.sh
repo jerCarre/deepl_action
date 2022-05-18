@@ -40,8 +40,8 @@ fi
 echo '$meta-json$' > /tmp/metadata.pandoc-tpl
 
 if [ -z "$OUTPUT" ]; then
-  pandoc --template=/tmp/metadata.pandoc-tpl $INPUT
+  pandoc --quiet --template=/tmp/metadata.pandoc-tpl $INPUT
 else
-  pandoc --template=/tmp/metadata.pandoc-tpl $INPUT > $OUTPUT
+  pandoc --quiet --template=/tmp/metadata.pandoc-tpl $INPUT > $OUTPUT
 fi
 rm -f /tmp/metadata.pandoc-tpl
