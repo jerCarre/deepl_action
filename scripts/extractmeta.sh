@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 display_usage() {
     echo "Usage: $0 [arguments] <source_file>"
