@@ -2,7 +2,7 @@ name: dev_check
 on:
   push:
     branches-ignore:
-      - '**'
+      - '*main*'
 jobs:
   dev_check:
     runs-on: ubuntu-latest
