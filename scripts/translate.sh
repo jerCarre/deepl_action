@@ -42,7 +42,19 @@ if (($# == 5)); then
     done
 else
     display_usage
-        exit 1
+    exit 1
+fi
+
+# check deepl quota
+curl -fsSL ${DEEPL_FREE_URL}/usage -d auth_key=$DEEPL_FREE_AUTH_TOKEN -o /tmp/${UUID}.usage.json
+character_count=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_count')
+character_limit=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_limit')
+
+if [ "$character_count" -ge "$character_limit" ]; then
+ echo "You have exceeded your Deepl Free quota (${character_count} / ${character_limit})"
+ exit 2
+else
+ echo "Your current consumption on Deepl Free (before this translation) : ${character_count} / ${character_limit}"
 fi
 
 # extract meta from input file
@@ -54,7 +66,7 @@ PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LA
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
@@ -64,7 +76,7 @@ translation_end=false
 until [ "$translation_end" = true ]
 do
     rm -f /tmp/${UUID}.status.json > /dev/null
-    curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
+    curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
     if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("error")') = true ]; then
         translation_end=true
         echo "$(cat /tmp/${UUID}.status.json | jq '.message')"
@@ -78,7 +90,7 @@ do
 done
 
 # get translated document
-curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
+curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
 
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
