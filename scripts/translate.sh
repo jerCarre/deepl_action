@@ -51,8 +51,10 @@ character_count=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_count')
 character_limit=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_limit')
 
 if [ "$character_count" -ge "$character_limit" ]; then
- echo "You have exceeded the Deepl Free quota (${character_count} / ${character_limit})"
+ echo "You have exceeded your Deepl Free quota (${character_count} / ${character_limit})"
  exit 2
+else
+ echo "Your current consumption on Deepl Free : ${character_count} / ${character_limit}"
 fi
 
 # extract meta from input file
