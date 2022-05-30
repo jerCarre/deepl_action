@@ -54,7 +54,7 @@ if [ "$character_count" -ge "$character_limit" ]; then
  echo "You have exceeded your Deepl Free quota (${character_count} / ${character_limit})"
  exit 2
 else
- echo "Your current consumption on Deepl Free : ${character_count} / ${character_limit}"
+ echo "Your current consumption on Deepl Free (before this translation) : ${character_count} / ${character_limit}"
 fi
 
 # extract meta from input file
