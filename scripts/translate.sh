@@ -45,6 +45,10 @@ else
         exit 1
 fi
 
+# check deepl quota
+curl -fsSL ${DEEPL_FREE_URL}/usage -d auth_key=$DEEPL_FREE_AUTH_TOKEN -o /tmp/${UUID}.usage.json
+cat /tmp/${UUID}.usage.json
+
 # extract meta from input file
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
@@ -54,7 +58,7 @@ PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LA
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-curl -fsSL -X POST $DEEPL_FREE_URL -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
@@ -64,7 +68,7 @@ translation_end=false
 until [ "$translation_end" = true ]
 do
     rm -f /tmp/${UUID}.status.json > /dev/null
-    curl -fsSL $DEEPL_FREE_URL/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
+    curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.status.json
     if [ $(cat /tmp/${UUID}.status.json | jq '.status | contains("error")') = true ]; then
         translation_end=true
         echo "$(cat /tmp/${UUID}.status.json | jq '.message')"
@@ -78,7 +82,7 @@ do
 done
 
 # get translated document
-curl -fsSL $DEEPL_FREE_URL/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
+curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
 
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
