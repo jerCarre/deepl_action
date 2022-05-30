@@ -42,12 +42,18 @@ if (($# == 5)); then
     done
 else
     display_usage
-        exit 1
+    exit 1
 fi
 
 # check deepl quota
 curl -fsSL ${DEEPL_FREE_URL}/usage -d auth_key=$DEEPL_FREE_AUTH_TOKEN -o /tmp/${UUID}.usage.json
-cat /tmp/${UUID}.usage.json
+character_count=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_count')
+character_limit=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_limit')
+
+if [ "$character_count" -ge "$character_limit" ]; then
+ echo "You have exceeded the Deepl Free quota (${character_count} / ${character_limit})"
+ exit 2
+fi
 
 # extract meta from input file
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
