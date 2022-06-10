@@ -1,0 +1,26 @@
+name: translation
+on:
+  push:
+    paths:
+      - 'i18n/README_fr.md'
+jobs:
+  translate2en:
+    runs-on: ubuntu-latest
+    name: Translate readme from french
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Translate
+        uses: ./
+        with:
+          input_file: "i18n/README_fr.md"
+          output_file: "README.md"
+          output_lang: "en"
+          deepl_free_token: "${{ secrets.TOKEN }}"
+      - name: Commit report
+        run: |
+          git config --global user.name 'deeplaction'
+          git config --global user.email 'deeplaction@users.noreply.github.com'
+          git add README.md
+          git commit -am "readme translation"
+          git push
