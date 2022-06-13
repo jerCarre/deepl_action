@@ -65,7 +65,7 @@ SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_d
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-if [ ! -z "$SOURCE_LANG" ]; then
+if [ -z "$SOURCE_LANG" ]; then
   curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
 else
   curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
