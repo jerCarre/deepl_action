@@ -26,7 +26,7 @@ if (($# == 5)); then
                 shift
                 ;;
             -l|--lang)
-                TARGET_LANG="$2"
+                TARGET_LANG=$([ "${2^^}" = "EN" ] && echo "EN-US" || echo "${2^^}")
                 shift
                 shift
                 ;;
@@ -66,9 +66,7 @@ PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo "-F \"source_lang="${SOURCE_
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-echo $TARGET_LANG" "$PARAM_SOURCE_LANG
-# curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG^^}" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
-curl -v -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=EN-US" -F "source_lang=FR" -o /tmp/${UUID}.response.json
+curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG^^}" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
