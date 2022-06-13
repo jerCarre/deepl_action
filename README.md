@@ -5,7 +5,7 @@ title: Deepl Free Action
 
 # Deepl Free Action
 
-This github action allows to translate a document from a repo.
+This github action allows to translate a document from a repo. It is based on the free version of the tool [DeepL](https://www.deepl.com/)
 
 To use it:
 
