@@ -67,7 +67,8 @@ pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
 echo ${TARGET_LANG}" "$PARAM_SOURCE_LANG
-curl --trace -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+# curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}"  -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
