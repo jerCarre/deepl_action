@@ -5,9 +5,9 @@ title: Deepl Free Action
 
 # Deepl Free Action
 
-This github action allows to translate a document from a repo. It is based on the free version of the tool [DeepL](https://www.deepl.com/)
+This github action allows to translate a document in a Github repo. It is based on the free version of the tool [DeepL](https://www.deepl.com/)
 
-To use it:
+How to use it:
 
     on:
       pull_request:
@@ -25,10 +25,12 @@ To use it:
             with:
               input_file: "example/test_en.md"
               output_file: "example/test_en.md"
-              output_lang: "en"
+              output_lang: "EN-US"
               deepl_free_token: "${{ secrets.TOKEN }}"
-          - name: Publish
-            uses: actions/upload-artifact@v3
-            with:
-              name: test_en.md
-              path: example/test_en.md
+          - name: Commit result
+            run: |
+              git config --global user.name 'your_name
+              git config --global user.email 'your_email@github.com'
+              git add example/test_en.md
+              git commit -am "english translation"
+              git push
