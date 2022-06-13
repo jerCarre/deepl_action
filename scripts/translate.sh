@@ -60,7 +60,7 @@ fi
 # extract meta from input file
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
-PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
+PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo "-F \"source_lang=${SOURCE_LANG^^}\"" || echo "")
 
 # transform input to HTML
 pandoc -t html $INPUT -o /tmp/${UUID}.html
