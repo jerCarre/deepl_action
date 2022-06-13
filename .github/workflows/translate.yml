@@ -15,7 +15,7 @@ jobs:
         with:
           input_file: "i18n/README_fr.md"
           output_file: "README.md"
-          output_lang: "en"
+          output_lang: "EN-US"
           deepl_free_token: "${{ secrets.TOKEN }}"
       - name: Commit report
         run: |
