@@ -32,5 +32,5 @@ How to use it:
               git config --global user.name 'your_name
               git config --global user.email 'your_email@github.com'
               git add example/test_en.md
-              git commit -am "english translation"
+              git commit -am "english translation
               git push
