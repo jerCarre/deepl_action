@@ -26,7 +26,7 @@ if (($# == 5)); then
                 shift
                 ;;
             -l|--lang)
-                TARGET_LANG="$2"
+                TARGET_LANG=$([ "${2^^}" = "EN" ] && echo "EN-US" || echo "${2^^}")
                 shift
                 shift
                 ;;
@@ -60,13 +60,16 @@ fi
 # extract meta from input file
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
-PARAM_SOURCE_LANG=$([ ! -z "$SOURCE_LANG" ] && echo '-F "source_lang=${SOURCE_LANG^^}"' || echo "")
 
 # transform input to HTML
 pandoc -t html $INPUT -o /tmp/${UUID}.html
 
 # ask for translation
-curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=$TARGET_LANG" $PARAM_SOURCE_LANG -o /tmp/${UUID}.response.json
+if [ -z "$SOURCE_LANG" ]; then
+  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
+else
+  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
+fi
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
 DOC_KEY=$(cat /tmp/${UUID}.response.json | jq -r '.document_key')
