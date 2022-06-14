@@ -2,7 +2,7 @@ name: translation
 on:
   push:
     paths:
-      - 'docs/FR/README.md'
+      - 'docs/fr/README.md'
 jobs:
   translate2en:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
       - name: Translate
         uses: ./
         with:
-          input_file: "docs/FR/README.md"
+          input_file: "docs/fr/README.md"
           output_file: "docs/README.md"
           output_lang: "EN-US"
           deepl_free_token: "${{ secrets.TOKEN }}"
