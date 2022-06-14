@@ -1,3 +1,4 @@
-- Translations
-  - [:uk: English](/)
-  - [:fr: Français](/FR/)
+<!-- _navbar.md -->
+
+* [En](/)
+* [Français](/fr/)
