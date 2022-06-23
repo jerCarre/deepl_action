@@ -119,6 +119,7 @@ else
 fi
 
 # publish output file
+mkdir -p ${OUTPUT%/*} > /dev/null
 cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
 
 # clean tmp files

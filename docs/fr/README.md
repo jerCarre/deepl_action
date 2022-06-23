@@ -17,7 +17,7 @@ Vous devez renseigner les paramètres suivants :
 * `output_lang` : la langue de traduction (voir [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 * `deepl_free_token` : votre token Deepl
 
-Exemple d'utilisation :
+Exemple d'utilisation : 
 
 ````
 on:
