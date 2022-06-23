@@ -1,4 +1,4 @@
 <!-- _navbar.md -->
-
-* [:en: En](/)
-* [:fr: Fr](/fr/)
+- Translations
+  - [:uk: English](/)
+  - [:fr: Français](/fr/)
