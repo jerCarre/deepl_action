@@ -67,6 +67,7 @@ pandoc -t html $INPUT -o /tmp/${UUID}.html
 # skip code bloc from translation
 cat /tmp/${UUID}.html
 sed -i 's/^<code>/<code translate="no">/ g' /tmp/${UUID}.html
+sed -i 's/^<div class="sourceCode"/<div class="sourceCode" translate="no"/g' /tmp/${UUID}.html
 cat /tmp/${UUID}.html
 
 # ask for translation
