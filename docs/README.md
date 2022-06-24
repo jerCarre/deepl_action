@@ -33,15 +33,15 @@ jobs:
       - name: Translate
         uses: ACTION_FULL_PATH
         with:
-          input_file: "example/test_en.md"
+          input_file: "example/test_fr.md"
           output_file: "example/test_en.md"
           output_lang: "EN-US"
           deepl_free_token: "${{ secrets.TOKEN }}"
       - name: Commit result
         run: |
-         git config --global user.name 'your_name
-         git config --global user.email 'your_email@github.com'
-         git add example/test_en.md
-         git commit -am 'english translation
-         git push
+          git config --global user.name 'your_name'
+          git config --global user.email 'your_email@github.com'
+          git add example/test_en.md
+          git commit -am 'english translation'
+          git push
 ```
