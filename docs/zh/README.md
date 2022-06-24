@@ -3,9 +3,9 @@ lang: ZH
 title: Deepl Free Action
 ---
 
-这个github动作允许你翻译一个文件在一个 Github。它是基于免费版本的工具[DeepL](https://www.deepl.com/)。
+这个github动作允许你翻译一个文件在一个 Github。它是基于免费版本的工具[DeepL](https://www.deepl.com)。
 
-∮∮先决条件
+## 先决条件
 
 你必须首先:
 
