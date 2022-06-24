@@ -2,7 +2,7 @@ name: translation
 on:
   push:
     paths:
-      - 'docs/fr/README.md'
+      - 'docs/FR/README.md'
 jobs:
   translate2en:
     runs-on: ubuntu-latest
@@ -13,22 +13,21 @@ jobs:
       - name: TranslateEN
         uses: ./
         with:
-          input_file: "docs/fr/README.md"
-          output_file: "docs/README.md"
+          input_file: "docs/FR/README.md"
+          output_file: "docs/EN-US/README.md"
           output_lang: "EN-US"
-          deepl_free_token: "${{ secrets.TOKEN }}"
-      - name: TranslateZH
-        uses: ./
-        with:
-          input_file: "docs/fr/README.md"
-          output_file: "docs/zh/README.md"
-          output_lang: "ZH"
-          deepl_free_token: "${{ secrets.TOKEN }}"          
+          deepl_free_token: "${{ secrets.TOKEN }}"       
       - name: Commit outputs
         continue-on-error: true
         run: |
           git config --global user.name 'deeplaction'
           git config --global user.email 'deeplaction@users.noreply.github.com'
-          git add docs/README.md docs/zh/README.md
+          git add docs/EN-US/README.md
           git commit -am "readme translation"
           git push
+  translate2zh:
+    uses: ./.github/workflows/translate_template.yml
+    with:
+      output_lang: ZH
+    secrets:
+      TOKEN: ${{ secrets.TOKEN }}

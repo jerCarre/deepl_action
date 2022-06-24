@@ -1,5 +1,5 @@
 <!-- _navbar.md -->
 - Translations
-  - [:uk:](/)
-  - [:fr:](/fr/)
-  - [:cn:](/zh/)  
+  - [:uk:](/EN-US/)
+  - [:fr:](/FR/)
+  - [:cn:](/ZH/)  
