@@ -118,6 +118,7 @@ if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
   # clean output markdown : remove ::: , modify code block header
   sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
   sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
+  sed -i 's/{translate="no"}/ /g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 else
   pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
 fi
