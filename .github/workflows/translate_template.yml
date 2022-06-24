@@ -12,7 +12,6 @@ on:
 
 jobs:
   translateJob:
-    name: Translate readme from french
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
