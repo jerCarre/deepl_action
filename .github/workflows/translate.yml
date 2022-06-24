@@ -25,6 +25,7 @@ jobs:
           output_lang: "ZH"
           deepl_free_token: "${{ secrets.TOKEN }}"          
       - name: Commit outputs
+        continue-on-error: true
         run: |
           git config --global user.name 'deeplaction'
           git config --global user.email 'deeplaction@users.noreply.github.com'
