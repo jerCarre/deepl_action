@@ -19,7 +19,7 @@ Vous devez renseigner les paramètres suivants :
 
 Exemple d'utilisation : 
 
-```` yaml
+```yaml
 on:
   pull_request:
     branches:
@@ -45,4 +45,5 @@ jobs:
           git add example/test_en.md
           git commit -am 'english translation'
           git push
-````
+```
+
