@@ -1,6 +1,8 @@
 name: dev_check
 on:
   push:
+    branches-ignore:
+      - '**'
 
 jobs:
   TranslateEN:
