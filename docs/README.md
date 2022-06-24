@@ -18,28 +18,30 @@ You must fill in the following parameters:
 
 Example of use:
 
-    on:
-      pull_request:
-        branches:
-          - main
-    jobs:
-      translate2en:
-        runs-on: ubuntu-latest
-        name: A job to test this action
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Translate
-            uses: ACTION_FULL_PATH
-            with:
-              input_file: "example/test_en.md"
-              output_file: "example/test_en.md"
-              output_lang: "EN-US
-              deepl_free_token: "${{ secrets.TOKEN }}"
-          - name: Commit result
-            run: |
-              git config --global user.name 'your_name
-              git config --global user.email 'your_email@github.com'
-              git add example/test_en.md
-              git commit -am 'english translation
-              git push
+``` yaml
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  translate2en:
+    runs-on: ubuntu-latest
+    name: A job to test this action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Translate
+        uses: ACTION_FULL_PATH
+        with:
+          input_file: "example/test_fr.md"
+          output_file: "example/test_en.md"
+          output_lang: "EN-US"
+          deepl_free_token: "${{ secrets.TOKEN }}"
+      - name: Commit result
+        run: |
+          git config --global user.name 'your_name'
+          git config --global user.email 'your_email@github.com'
+          git add example/test_en.md
+          git commit -am 'english translation'
+          git push
+```

@@ -18,28 +18,30 @@ title: Deepl Free Action
 
 使用实例。
 
-    上。
-      pull_request。
-        分支机构。
-          - 主要
-    工作。
-      翻译2en。
-        运行于: ubuntu-latest
-        名称： 测试此动作的工作
-        步骤。
-          - 名称：结账
-            使用: actions/checkout@v3
-          - 名称：翻译
-            使用：ACTION_FULL_PATH
-            与。
-              input_file: "example/test_en.md"
-              output_file: "example/test_en.md"
-              output_lang: "EN-US
-              deepl_free_token: "${{ secrets.TOKEN }}"
-          - 名称：承诺结果
-            运行: |
-              git config --global user.name 'your_name' 。
-              git config --global user.email 'your_email@github.com'
-              git add example/test_en.md
-              git commit -am 'chinese translation
-              git push
+``` yaml
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  translate2en:
+    runs-on: ubuntu-latest
+    name: A job to test this action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Translate
+        uses: ACTION_FULL_PATH
+        with:
+          input_file: "example/test_fr.md"
+          output_file: "example/test_en.md"
+          output_lang: "EN-US"
+          deepl_free_token: "${{ secrets.TOKEN }}"
+      - name: Commit result
+        run: |
+          git config --global user.name 'your_name'
+          git config --global user.email 'your_email@github.com'
+          git add example/test_en.md
+          git commit -am 'english translation'
+          git push
+```
