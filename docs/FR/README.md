@@ -52,4 +52,3 @@ jobs:
           git commit -am 'english translation'
           git push
 ```
- 

@@ -17,10 +17,10 @@ You must first:
 
 You must fill in the following parameters:
 
--   `input_file`{translate="no"}: the markdown file to translate
--   `output_file`{translate="no"}: the destination file containing the translation
--   `output_lang`{translate="no"}: the translation language (see [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
--   `deepl_free_token`{translate="no"}: your Deepl token
+-   `input_file` : the markdown file to translate
+-   `output_file` : the destination file containing the translation
+-   `output_lang` : the translation language (see [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
+-   `deepl_free_token` : your Deepl token
 
 ## Example
 
