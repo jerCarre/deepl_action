@@ -19,7 +19,7 @@ Vous devez renseigner les paramètres suivants :
 
 Exemple d'utilisation : 
 
-```` yaml
+```yaml
 on:
   pull_request:
     branches:
