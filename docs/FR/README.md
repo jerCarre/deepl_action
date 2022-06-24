@@ -3,12 +3,18 @@ lang: fr
 title: Deepl Free Action
 ---
 
-# Deepl Free Action
-
 Cette action github permet de traduire un document au sein d'un repo Github. 
-Elle est basée sur la version gratuite de l'outil [DeepL](https://www.deepl.com/)
+Elle est basée sur la version gratuite de l'outil [DeepL](https://www.deepl.com)
 
-Vous devez au préalable, vous enregistrer sur le site Deepl (gratuit) puis générer un token d'API. Ce token sera stocké dans un secret de votre repo.
+## Pré-requis
+
+Vous devez au préalable :
+
+1. Vous enregistrer sur le site Deepl (gratuit) 
+2. Générer un token d'API (onglet Compte)
+3. Enregistrer ce token dans un secret de votre repo
+
+## Paramètres
 
 Vous devez renseigner les paramètres suivants :
 
@@ -17,7 +23,7 @@ Vous devez renseigner les paramètres suivants :
 * `output_lang` : la langue de traduction (voir [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 * `deepl_free_token` : votre token Deepl
 
-Exemple d'utilisation : 
+## Exemple
 
 ```yaml
 on:
