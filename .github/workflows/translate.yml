@@ -1,5 +1,6 @@
 name: translation
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'docs/FR/README.md'
