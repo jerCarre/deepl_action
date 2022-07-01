@@ -30,6 +30,7 @@ jobs:
           git config --global user.name 'deeplaction'
           git config --global user.email 'deeplaction@users.noreply.github.com'
           git pull
+          echo "output="${{steps.translate.outputs.generated_file}}
           git add  ${{steps.translate.outputs.generated_file}}
           git commit -am "readme translation"
           git push
