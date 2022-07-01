@@ -132,3 +132,5 @@ cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
 
 # clean tmp files
 rm -rf /tmp/${UUID}.* > /dev/null
+
+echo "$OUTPUT"
