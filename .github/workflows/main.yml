@@ -11,6 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Translate
+        id: translate
         uses: ./
         with:
           input_file: "example/test_fr.md"
@@ -21,4 +22,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test_en.md
-          path: example/test_en.md
+          path: ${{steps.translate.outputs.generated_file}}

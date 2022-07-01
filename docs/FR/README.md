@@ -25,7 +25,13 @@ Vous devez renseigner les paramètres suivants :
 * `output_lang` : la langue de traduction (voir [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 * `deepl_free_token` : votre token Deepl
 
+En sortie :
+
+* `generated_file` : le fichier traduit avec son chemin complet
+
 ## Exemple
+
+Dans cet exemple on traduit en anglais le fichier example/readme.md et on génère le fichier example/EN-US/readme.md. Puis on l'ajoute au repo.
 
 ```yaml
 on:
@@ -40,17 +46,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Translate
+        id: translate
         uses: ACTION_FULL_PATH
         with:
-          input_file: "example/test_fr.md"
-          output_file: "example/test_en.md"
+          input_file: "example/readme.md"
+          output_file: "example/EN-US/"
           output_lang: "EN-US"
           deepl_free_token: "${{ secrets.TOKEN }}"
       - name: Commit result
         run: |
           git config --global user.name 'your_name'
           git config --global user.email 'your_email@github.com'
-          git add example/test_en.md
+          git pull
+          git add  ${{steps.translate.outputs.generated_file}}
           git commit -am 'english translation'
           git push
 ```
