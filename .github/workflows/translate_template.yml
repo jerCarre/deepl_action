@@ -20,7 +20,7 @@ jobs:
         uses: ./
         with:
           input_file: "docs/FR/README.md"
-          output_file: "docs/${{ inputs.output_lang }}/read.md"
+          output_file: "docs/${{ inputs.output_lang }}/"
           output_lang: ${{ inputs.output_lang }}
           deepl_free_token: "${{ secrets.TOKEN }}"       
       - name: Commit outputs
