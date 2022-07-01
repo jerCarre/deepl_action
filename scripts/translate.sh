@@ -45,6 +45,9 @@ else
     exit 1
 fi
 
+# check output is folder or file
+[[ "${OUTPUT}" == */ ]] && OUTPUT="${OUTPUT}${INPUT##*/}" || OUTPUT="${OUTPUT}"
+
 # check deepl quota
 curl -fsSL ${DEEPL_FREE_URL}/usage -d auth_key=$DEEPL_FREE_AUTH_TOKEN -o /tmp/${UUID}.usage.json
 character_count=$(cat "/tmp/${UUID}.usage.json" | jq -r '.character_count')
@@ -129,3 +132,5 @@ cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
 
 # clean tmp files
 rm -rf /tmp/${UUID}.* > /dev/null
+
+echo "$OUTPUT"

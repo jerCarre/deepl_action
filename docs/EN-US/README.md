@@ -19,8 +19,8 @@ You must first:
 
 You must fill in the following parameters:
 
--   `input_file` : the markdown file to translate
--   `output_file` : the destination file containing the translation
+-   `input_file` : the markdown file to translate.
+-   `output_file` : the destination file containing the translation. You can only specify a folder (must end with `/` ), in this case the name of the generated file will be the same as `input_file` .
 -   `output_lang` : the translation language (see [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 -   `deepl_free_token` : your Deepl token
 
