@@ -46,7 +46,7 @@ else
 fi
 
 # check output is folder or file
-OUTPUT=$([ "${OUTPUT}" == */ ] && echo ${OUTPUT}${INPUT##*/} || echo ${OUTPUT})
+[[ "${OUTPUT}" == */ ]] && OUTPUT="${OUTPUT}${INPUT##*/}" || OUTPUT="${OUTPUT}"
 echo $OUTPUT
 
 # check deepl quota
