@@ -9,7 +9,10 @@ inputs:
   output_lang:
     required: true
   deepl_free_token:
-    required: true    
+    required: true
+outputs:
+  generated_file:
+    description: translated file
 runs:
   using: 'docker'
   image: 'Dockerfile'
