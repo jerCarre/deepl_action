@@ -26,7 +26,7 @@ You must fill in the following parameters:
 
 On exit:
 
--   `generated_file` : the translated file with its path path
+-   `generated_file` : the path to the translated file
 
 ## Example
 
