@@ -5,7 +5,7 @@ title: Deepl Free Action
 
 这个github动作允许你翻译一个文件在一个 Github。它是基于免费版本的工具[DeepL](https://www.deepl.com)。
 
-> 该文件最初以[法语](/FR/)编写，然后自动翻译成[英文](/EN-US/)和[中文](/ZH/)。
+> 该文件最初是用[法语](/FR/)编写的，然后自动翻译成[英语](/EN-US/)和[中文](/ZH/)。
 
 ## 先决条件
 
@@ -20,7 +20,7 @@ title: Deepl Free Action
 你必须填写以下参数。
 
 -   `input_file` ：要翻译的markdown文件。
--   `output_file` : 含有 \"我 \"的目标文件。 翻译。你只能指定一个文件夹（必须以 `/` ），在这种情况下，生成的文件名将与 `input_file` 。
+-   `output_file` : 目的地文件，包含 翻译。你只能指定一个文件夹（必须以 `/` ），在这种情况下，生成的文件的名称将与 `input_file` 。
 -   `output_lang` : 翻译语言（见[Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 -   `deepl_free_token` : 你的Deepl令牌
 
