@@ -27,7 +27,7 @@ Vous devez renseigner les paramètres suivants :
 
 En sortie :
 
-* `generated_file` : le fichier traduit avec son chemin complet
+* `generated_file` : le chemin vers le fichier traduit
 
 ## Exemple
 
