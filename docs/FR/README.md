@@ -20,8 +20,8 @@ Vous devez au préalable :
 
 Vous devez renseigner les paramètres suivants :
 
-* `input_file` : le fichier markdown à traduire
-* `output_file` : le fichier destination contenant la traduction
+* `input_file` : le fichier markdown à traduire.
+* `output_file` : le fichier destination contenant la traduction. Vous pouvez seulement indiquer un dossier (doit finir par `/`), dans ce cas le nom du fichier généré sera le même que `input_file`.
 * `output_lang` : la langue de traduction (voir [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 * `deepl_free_token` : votre token Deepl
 
