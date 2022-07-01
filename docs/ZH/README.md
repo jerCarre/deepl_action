@@ -26,7 +26,7 @@ title: Deepl Free Action
 
 退出时:
 
--   `generated_file` : 翻译后的文件及其路径 路
+-   `generated_file` : 翻译文件的路径
 
 ## 例子
 
