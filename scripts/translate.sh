@@ -32,7 +32,7 @@ convert() {
     pandoc_output_options=""
     case ${output_extension,,} in
         md|markdown)
-            pandoc_output_options=${meta_out_option}"-s --wrap=none -t markdown-header_attributes --markdown-headings=atx"
+            pandoc_output_options="-s --wrap=none -t markdown-header_attributes --markdown-headings=atx "${meta_out_option}
             ;;
         *)
             ;;
