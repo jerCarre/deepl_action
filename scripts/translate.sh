@@ -16,6 +16,47 @@ display_usage() {
     echo " <source_file>: the file to translate"
 }
 
+convert() {
+    input_file=$1
+    output_file=$2
+
+    meta_out_option=""
+    if [ "$#" -eq 3 ]; then
+        meta_out_option="--metadata-file=$3"
+    fi
+
+    input_extension=${input_file##*.}
+    output_extension=${output_file##*.}
+
+    # before conversion actions
+    pandoc_output_options=""
+    case ${output_extension,,} in
+        md|markdown)
+            pandoc_output_options=${meta_out_option}"-s --wrap=none -t markdown-header_attributes --markdown-headings=atx"
+            ;;
+        *)
+            ;;
+    esac
+
+    # conversion
+    pandoc $pandoc_output_options ${input_file} -o ${output_file}
+
+    # after conversion actions
+    case ${output_extension,,} in
+        md|markdown)
+            sed -i '/^:::/d' ${output_file}
+            sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' ${output_file}
+            sed -i 's/{translate="no"}/ /g' ${output_file}
+            ;;
+        html|htm)
+            sed -i 's/<code>/<code translate="no">/ g' ${output_file}
+            sed -i 's/<div class="sourceCode"/<div class="sourceCode" translate="no"/g' ${output_file}
+            ;;
+        *)
+            ;;
+    esac
+}
+
 # check args : input, target_lang, output
 if (($# == 5)); then
     while [[ $# -gt 0 ]]; do
@@ -64,18 +105,19 @@ fi
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
 
-# transform input to HTML
-pandoc -t html $INPUT -o /tmp/${UUID}.html
+# edit original meta to insert/update target lang
+jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
 
-# skip code blocks from translation
-sed -i 's/<code>/<code translate="no">/ g' /tmp/${UUID}.html
-sed -i 's/<div class="sourceCode"/<div class="sourceCode" translate="no"/g' /tmp/${UUID}.html
+CONVERSION_EXTENSION="html"
+
+# transform input to deepl available format
+convert $INPUT /tmp/${UUID}.${CONVERSION_EXTENSION}
 
 # ask for translation
 if [ -z "$SOURCE_LANG" ]; then
-  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
+  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
 else
-  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.html" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
+  curl -fsSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
 fi
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
@@ -100,31 +142,12 @@ do
 done
 
 # get translated document
-curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.html
+curl -fsSL ${DEEPL_FREE_URL}/document/$DOC_ID/result -d auth_key=$DEEPL_FREE_AUTH_TOKEN -d document_key=$DOC_KEY -o /tmp/${UUID}.result.${CONVERSION_EXTENSION}
 
 # convert to output
 OUTPUT_EXTENSION=${OUTPUT##*.}
 
-# edit original meta to insert/update target lang
-jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
-
-# define pandoc options
-PANDOC_OUTPUT_OPTIONS="-s --metadata-file=/tmp/${UUID}.meta_out.json --wrap=none"
-
-if [ "${OUTPUT_EXTENSION^^}" = "MD" ]; then
-
-  # add extra options
-  PANDOC_OUTPUT_OPTIONS="${PANDOC_OUTPUT_OPTIONS} -t markdown-header_attributes --markdown-headings=atx"
-
-  pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
-
-  # clean output markdown : remove ::: , modify code block header
-  sed -i '/^:::/d' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
-  sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
-  sed -i 's/{translate="no"}/ /g' /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
-else
-  pandoc $PANDOC_OUTPUT_OPTIONS /tmp/${UUID}.result.html -o /tmp/${UUID}.ouput.$OUTPUT_EXTENSION
-fi
+convert /tmp/${UUID}.result.${CONVERSION_EXTENSION} /tmp/${UUID}.ouput.$OUTPUT_EXTENSION /tmp/${UUID}.meta_out.json
 
 # publish output file
 mkdir -p ${OUTPUT%/*} > /dev/null
