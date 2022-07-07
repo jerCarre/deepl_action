@@ -37,7 +37,7 @@ jobs:
       - name: Publish
         uses: actions/upload-artifact@v3
         with:
-          name: test_en.md
+          name: test_en.rst
           path: ${{steps.translate.outputs.generated_file}}          
   TranslateZH:
     runs-on: ubuntu-latest
