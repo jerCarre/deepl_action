@@ -1,5 +1,6 @@
 #!/bin/bash
-set -xe
+set -e
+# set -xe
 
 OUTPUT=""
 INPUT=""
