@@ -34,7 +34,11 @@ convert() {
         md|markdown)
             pandoc_output_options="-s --wrap=none -t markdown-header_attributes --markdown-headings=atx "${meta_out_option}
             ;;
+        rst)
+            pandoc_output_options="-s --wrap=none "${meta_out_option}
+            ;;
         *)
+            pandoc_output_options="-s "${meta_out_option}
             ;;
     esac
 
