@@ -120,7 +120,7 @@ SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_d
 jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
 
 input_extension=${INPUT##*.}
-CONVERSION_EXTENSION=ConversionExtensionArray[${input_extension,,}]
+CONVERSION_EXTENSION=${ConversionExtensionArray[${input_extension,,}]}
 echo CONVERSION_EXTENSION=$CONVERSION_EXTENSION
 
 # transform input to deepl available format
