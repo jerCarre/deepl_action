@@ -65,6 +65,10 @@ convert() {
                 ;;
         esac
 
+    else
+
+        cp $input_file $output_file > /dev/null
+
     fi
 }
 
@@ -128,9 +132,9 @@ convert $INPUT /tmp/${UUID}.${CONVERSION_EXTENSION}
 
 # ask for translation
 if [ "${SOURCE_LANG^^}" == "NULL" ]; then
-  curl -v -fSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
+  curl -s -fSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -o /tmp/${UUID}.response.json
 else
-  curl -v -fSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
+  curl -s -fSL -X POST ${DEEPL_FREE_URL}/document -F "file=@/tmp/${UUID}.${CONVERSION_EXTENSION}" -F "auth_key=$DEEPL_FREE_AUTH_TOKEN" -F "target_lang=${TARGET_LANG}" -F "source_lang=${SOURCE_LANG^^}" -o /tmp/${UUID}.response.json
 fi
 
 DOC_ID=$(cat /tmp/${UUID}.response.json | jq -r '.document_id')
