@@ -6,6 +6,8 @@ OUTPUT=""
 INPUT=""
 TARGET_LANG=""
 
+declare -A ConversionExtensionArray=( [md]=html [markdown]=html [rst]=html [html]=html [docx]=docx [pptx]=pptx [pdf]=pdf [txt]=txt )
+
 # gen UUID
 UUID=$(cat /proc/sys/kernel/random/uuid)
 
@@ -29,37 +31,41 @@ convert() {
     input_extension=${input_file##*.}
     output_extension=${output_file##*.}
 
-    # before conversion actions
-    pandoc_output_options=""
-    case ${output_extension,,} in
-        md|markdown)
-            pandoc_output_options="-s --wrap=none -t markdown-header_attributes --markdown-headings=atx "${meta_out_option}
-            ;;
-        rst)
-            pandoc_output_options="-s --wrap=none "${meta_out_option}
-            ;;
-        *)
-            pandoc_output_options="-s "${meta_out_option}
-            ;;
-    esac
+    if [ "$input_extension" != "$output_extension" ]; then
 
-    # conversion
-    pandoc $pandoc_output_options ${input_file} -o ${output_file}
+        # before conversion actions
+        pandoc_output_options=""
+        case ${output_extension,,} in
+            md|markdown)
+                pandoc_output_options="-s --wrap=none -t markdown-header_attributes --markdown-headings=atx "${meta_out_option}
+                ;;
+            rst)
+                pandoc_output_options="-s --wrap=none "${meta_out_option}
+                ;;
+            *)
+                pandoc_output_options="-s "${meta_out_option}
+                ;;
+        esac
 
-    # after conversion actions
-    case ${output_extension,,} in
-        md|markdown)
-            sed -i '/^:::/d' ${output_file}
-            sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' ${output_file}
-            sed -i 's/{translate="no"}/ /g' ${output_file}
-            ;;
-        html|htm)
-            sed -i 's/<code>/<code translate="no">/ g' ${output_file}
-            sed -i 's/<div class="sourceCode"/<div class="sourceCode" translate="no"/g' ${output_file}
-            ;;
-        *)
-            ;;
-    esac
+        # conversion
+        pandoc $pandoc_output_options ${input_file} -o ${output_file}
+
+        # after conversion actions
+        case ${output_extension,,} in
+            md|markdown)
+                sed -i '/^:::/d' ${output_file}
+                sed -i 's/^``` {.sourceCode .\([a-z]*\).*}/``` \1/g' ${output_file}
+                sed -i 's/{translate="no"}/ /g' ${output_file}
+                ;;
+            html|htm)
+                sed -i 's/<code>/<code translate="no">/ g' ${output_file}
+                sed -i 's/<div class="sourceCode"/<div class="sourceCode" translate="no"/g' ${output_file}
+                ;;
+            *)
+                ;;
+        esac
+
+    fi
 }
 
 # check args : input, target_lang, output
@@ -113,7 +119,9 @@ SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_d
 # edit original meta to insert/update target lang
 jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
 
-CONVERSION_EXTENSION="html"
+input_extension=${INPUT##*.}
+CONVERSION_EXTENSION=ConversionExtensionArray[${input_extension,,}]
+echo CONVERSION_EXTENSION=$CONVERSION_EXTENSION
 
 # transform input to deepl available format
 convert $INPUT /tmp/${UUID}.${CONVERSION_EXTENSION}

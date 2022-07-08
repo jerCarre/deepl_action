@@ -38,8 +38,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test_en.rst
-          path: ${{steps.translate.outputs.generated_file}}          
-  TranslateZH:
+          path: ${{steps.translate.outputs.generated_file}}            
+  TranslateDocxEN:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,12 +48,12 @@ jobs:
         id: translate
         uses: ./
         with:
-          input_file: "example/test_fr.md"
-          output_file: "example/test_zh.md"
-          output_lang: "ZH"
+          input_file: "example/test_fr.docx"
+          output_file: "example/EN-US/"
+          output_lang: "EN-US"
           deepl_free_token: "${{ secrets.TOKEN }}"
       - name: Publish
         uses: actions/upload-artifact@v3
         with:
-          name: test_zh.md
-          path: ${{steps.translate.outputs.generated_file}}     
+          name: test_en.docx
+          path: ${{steps.translate.outputs.generated_file}}  
