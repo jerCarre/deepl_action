@@ -99,6 +99,14 @@ else
     exit 1
 fi
 
+INPUT_EXTENSION=${INPUT##*.}
+
+# check input extension support
+if [ ! -v "ConversionExtensionArray[$INPUT_EXTENSION]" ]; then
+    echo "file extension not supported"
+    exit 1
+fi
+
 # check output is folder or file
 [[ "${OUTPUT}" == */ ]] && OUTPUT="${OUTPUT}${INPUT##*/}" || OUTPUT="${OUTPUT}"
 
@@ -121,10 +129,8 @@ SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_d
 # edit original meta to insert/update target lang
 jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
 
-input_extension=${INPUT##*.}
-CONVERSION_EXTENSION=${ConversionExtensionArray[${input_extension,,}]}
-
 # transform input to deepl available format
+CONVERSION_EXTENSION=${ConversionExtensionArray[${INPUT_EXTENSION,,}]}
 convert $INPUT /tmp/${UUID}.${CONVERSION_EXTENSION}
 
 # ask for translation
