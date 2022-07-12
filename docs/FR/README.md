@@ -3,7 +3,7 @@ lang: fr
 title: Deepl Free Action
 ---
 
-Cette action github permet de traduire un document au sein d'un repo Github. 
+Cette action github permet de traduire un document au sein d'un repo Github. Les formats de fichier supportés sont : md, rst, docx, pptx, html, pdf ou txt.
 Elle est basée sur la version gratuite de l'outil [DeepL](https://www.deepl.com)
 
 > Cette documentation est initialement écrite en [français](/FR/) puis traduite automatiquement en [anglais](/EN-US/) et en [chinois](/ZH/).
@@ -20,7 +20,7 @@ Vous devez au préalable :
 
 Vous devez renseigner les paramètres suivants :
 
-* `input_file` : le fichier markdown à traduire.
+* `input_file` : le fichier à traduire.
 * `output_file` : le fichier destination contenant la traduction. Vous pouvez seulement indiquer un dossier (doit finir par `/`), dans ce cas le nom du fichier généré sera le même que `input_file`.
 * `output_lang` : la langue de traduction (voir [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 * `deepl_free_token` : votre token Deepl
