@@ -1,9 +1,13 @@
 ---
-lang: EN-US
+generator: pandoc
+lang: fr
 title: Deepl Free Action
+viewport: width=device-width, initial-scale=1.0, user-scalable=yes
 ---
 
-This github action allows to translate a document in a Github repo. It is based on the free version of the tool [DeepL](https://www.deepl.com)
+# Deepl Free Action
+
+This github action allows to translate a document in a Github repo. Supported file formats are: md, rst, docx, pptx, html, pdf or txt. It is based on the free version of the tool [DeepL](https://www.deepl.com)
 
 > This documentation is initially written in [French](/FR/) and then automatically translated into [English](/EN-US/) and [Chinese](/ZH/).
 
@@ -19,7 +23,7 @@ You must first:
 
 You must fill in the following parameters:
 
--   `input_file` : the markdown file to translate.
+-   `input_file` : the file to translate.
 -   `output_file` : the destination file containing the translation. You can only specify a folder (must end with `/` ), in this case the name of the generated file will be the same as `input_file` .
 -   `output_lang` : the translation language (see [Deepl API](https://www.deepl.com/fr/docs-api/translating-documents/uploading/))
 -   `deepl_free_token` : your Deepl token
