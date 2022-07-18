@@ -17,7 +17,7 @@ viewport: width=device-width, initial-scale=1.0, user-scalable=yes
 
 1.  在Deepl网站上注册（免费）。
 2.  生成一个API令牌（账户标签）。
-3.  在你的 repo 的一个秘密中注册这个令牌
+3.  在你的版本库的一个秘密中注册这个令牌
 
 ## 参数
 
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Translate
         id: translate
-        uses: ACTION_FULL_PATH
+        uses: jerCarre/deepl_action@1.0
         with:
           input_file: "example/readme.md"
           output_file: "example/EN-US/"

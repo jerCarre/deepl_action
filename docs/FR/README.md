@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Translate
         id: translate
-        uses: ACTION_FULL_PATH
+        uses: jerCarre/deepl_action@1.0
         with:
           input_file: "example/readme.md"
           output_file: "example/EN-US/"
