@@ -119,9 +119,6 @@ if [ ! -v "ConversionExtensionArray[$INPUT_EXTENSION]" ]; then
     exit 1
 fi
 
-# summary message
-echo "### Deepl translation !!" >> $GITHUB_STEP_SUMMARY
-
 # check output is folder or file
 [[ "${OUTPUT}" == */ ]] && OUTPUT="${OUTPUT}${INPUT##*/}" || OUTPUT="${OUTPUT}"
 
