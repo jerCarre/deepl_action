@@ -103,7 +103,7 @@ fi
 if [ "$TARGET_LANG" = "EN" ]; then
     TARGET_LANG="en-US"
 else
-    TARGET_LANG=$(./bcp47 $TARGET_LANG)
+    TARGET_LANG=$(bcp47 $TARGET_LANG)
     if [ "$TARGET_LANG" = "" ]; then
         echo "Target language is empty or not respects the correct encoding"
         exit 1
@@ -137,7 +137,7 @@ fi
 # extract meta from input file
 /extractmeta.sh $INPUT -o /tmp/${UUID}.meta.json
 SOURCE_LANG=$(cat "/tmp/${UUID}.meta.json" | jq -r 'with_entries(.key |= ascii_downcase ).lang')
-SOURCE_LANG=$(/bcp47 $SOURCE_LANG)
+SOURCE_LANG=$(bcp47 $SOURCE_LANG)
 
 # edit original meta to insert/update target lang
 jq .lang='"'${TARGET_LANG}'"' /tmp/${UUID}.meta.json > /tmp/${UUID}.meta_out.json
