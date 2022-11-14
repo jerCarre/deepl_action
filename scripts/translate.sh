@@ -187,7 +187,7 @@ mkdir -p ${OUTPUT%/*} > /dev/null
 cp /tmp/${UUID}.ouput.$OUTPUT_EXTENSION $OUTPUT
 
 # output generated file
-echo "{generated_file}={$(echo $OUTPUT)}" >> $GITHUB_OUTPUT
+echo "generated_file=$OUTPUT" >> $GITHUB_OUTPUT
 
 # clean tmp files
 rm -rf /tmp/${UUID}.* > /dev/null
