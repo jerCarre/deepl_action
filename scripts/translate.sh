@@ -103,7 +103,7 @@ fi
 if [ "$TARGET_LANG" = "EN" ]; then
     TARGET_LANG="en-US"
 else
-    TARGET_LANG=$(/bcp47 $TARGET_LANG)
+    TARGET_LANG=$(./bcp47 $TARGET_LANG)
     if [ "$TARGET_LANG" = "" ]; then
         echo "Target language is empty or not respects the correct encoding"
         exit 1
